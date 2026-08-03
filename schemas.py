@@ -1,13 +1,18 @@
 from pydantic import BaseModel
 
-class StudentCreate(BaseModel):
+
+class StudentBase(BaseModel):
     name: str
     age: int
-    course: str
     email: str
+    course: str
 
 
-class Student(StudentCreate):
+class StudentCreate(StudentBase):
+    pass
+
+
+class Student(StudentBase):
     id: int
 
     class Config:

@@ -12,18 +12,23 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Student CRUD API")
 
 
+@app.get("/")
+def home():
+    return {"message": "Student CRUD API is Running"}
+
+
 @app.post("/students/", response_model=schemas.Student)
 def create_student(student: schemas.StudentCreate, db: Session = Depends(get_db)):
     return crud.create_student(db, student)
 
 
 @app.get("/students/", response_model=list[schemas.Student])
-def get_all_students(db: Session = Depends(get_db)):
+def read_students(db: Session = Depends(get_db)):
     return crud.get_students(db)
 
 
 @app.get("/students/{student_id}", response_model=schemas.Student)
-def get_student(student_id: int, db: Session = Depends(get_db)):
+def read_student(student_id: int, db: Session = Depends(get_db)):
     student = crud.get_student(db, student_id)
 
     if student is None:
@@ -33,11 +38,7 @@ def get_student(student_id: int, db: Session = Depends(get_db)):
 
 
 @app.put("/students/{student_id}", response_model=schemas.Student)
-def update_student(
-    student_id: int,
-    student: schemas.StudentCreate,
-    db: Session = Depends(get_db),
-):
+def update_student(student_id: int, student: schemas.StudentCreate, db: Session = Depends(get_db)):
     updated_student = crud.update_student(db, student_id, student)
 
     if updated_student is None:
